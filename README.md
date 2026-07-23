@@ -8,7 +8,7 @@
 
 ---
 
-## 🧑‍💻 Sobre mí
+## Sobre mí
 
 - Estudiante de **Ingeniería y Sistemas de Datos** en la **UPM — ETSIT** (Madrid)
 - Cofundador de **FORTIA Security** — ciberseguridad para PYMEs: auditorías web, simulaciones de phishing y formación de empleados
@@ -25,7 +25,6 @@
 ![Bash](https://img.shields.io/badge/Bash-4EAA25?style=for-the-badge&logo=gnubash&logoColor=white)
 ![C](https://img.shields.io/badge/C-00599C?style=for-the-badge&logo=c&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
-![LaTeX](https://img.shields.io/badge/LaTeX-008080?style=for-the-badge&logo=latex&logoColor=white)
 
 ### Big Data & Machine Learning
 ![Apache Spark](https://img.shields.io/badge/Apache%20Spark-E25A1C?style=for-the-badge&logo=apachespark&logoColor=white)
@@ -35,8 +34,6 @@
 ![Hadoop](https://img.shields.io/badge/Hadoop-66CCFF?style=for-the-badge&logo=apachehadoop&logoColor=black)
 ![Flink](https://img.shields.io/badge/Apache%20Flink-E6526F?style=for-the-badge&logo=apacheflink&logoColor=white)
 ![Pandas](https://img.shields.io/badge/Pandas-150458?style=for-the-badge&logo=pandas&logoColor=white)
-![scikit-learn](https://img.shields.io/badge/scikit--learn-F7931E?style=for-the-badge&logo=scikitlearn&logoColor=white)
-![OpenCV](https://img.shields.io/badge/OpenCV-5C3EE8?style=for-the-badge&logo=opencv&logoColor=white)
 
 ### Bases de datos
 ![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
@@ -83,23 +80,13 @@
 - ✅ **Google Cybersecurity Professional Certificate**
 - ✅ **TryHackMe — Pentester Jr**
 
-<div align="center">
-  <a href="https://tryhackme.com/p/javisaguarantona">
-    <img src="https://tryhackme-badges.s3.amazonaws.com/javisaguarantona.png" alt="TryHackMe Badge"/>
-  </a>
-</div>
-
 ---
 
 ## 📊 Estadísticas de GitHub
 
-<div align="center">
-  <img height="165" src="https://github-readme-stats.vercel.app/api?username=TU-USUARIO&show_icons=true&hide_border=true&bg_color=0d1117&title_color=d4af37&icon_color=d4af37&text_color=c9d1d9" alt="GitHub Stats"/>
-  <img height="165" src="https://github-readme-stats.vercel.app/api/top-langs/?username=TU-USUARIO&layout=compact&hide_border=true&bg_color=0d1117&title_color=d4af37&text_color=c9d1d9" alt="Top Languages"/>
-</div>
 
 <div align="center">
-  <img src="https://github-readme-streak-stats.herokuapp.com/?user=TU-USUARIO&hide_border=true&background=0d1117&ring=d4af37&fire=d4af37&currStreakLabel=d4af37" alt="GitHub Streak"/>
+  <img src="https://github-readme-streak-stats.herokuapp.com/?user=javiersaguar&hide_border=true&background=0d1117&ring=d4af37&fire=d4af37&currStreakLabel=d4af37" alt="GitHub Streak"/>
 </div>
 
 ---
@@ -114,6 +101,4 @@
 
 </div>
 
-<div align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:d4af37,40:2b2b2b,100:0d1117&height=120&section=footer" width="100%"/>
-</div>
+
