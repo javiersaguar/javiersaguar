@@ -63,7 +63,7 @@
 
 ---
 
-## 🚀 Proyectos destacados
+## Proyectos destacados
 
 | Proyecto | Descripción | Stack |
 |---|---|---|
