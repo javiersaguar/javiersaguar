@@ -75,23 +75,15 @@
 
 ---
 
-## 📜 Certificaciones y formación
+## Certificaciones y formación
 
-- ✅ **Google Cybersecurity Professional Certificate**
-- ✅ **TryHackMe — Pentester Jr**
+- **Google Cybersecurity Professional Certificate**
+- **TryHackMe — Pentester Jr**
+
 
 ---
 
-## 📊 Estadísticas de GitHub
-
-
-<div align="center">
-  <img src="https://github-readme-streak-stats.herokuapp.com/?user=javiersaguar&hide_border=true&background=0d1117&ring=d4af37&fire=d4af37&currStreakLabel=d4af37" alt="GitHub Streak"/>
-</div>
-
----
-
-## 📫 Contacto
+## Contacto
 
 <div align="center">
 
