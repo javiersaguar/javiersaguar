@@ -10,13 +10,11 @@ QUESTS, INVENTORY...) and run it again.
 
 from __future__ import annotations
 
-import base64
 import functools
-import io
 import json
 from pathlib import Path
 
-from PIL import Image, ImageFont
+from PIL import ImageFont
 
 ROOT = Path(__file__).resolve().parent.parent
 ASSETS = ROOT / "assets"
@@ -746,41 +744,15 @@ NAME = ["JAVIER", "SAGUAR"]
 ROLE = "PLAYER 1 · DATA ENGINEER"
 SUBTITLE = "Final-year Data Engineering student · ETSIT-UPM, Madrid"
 TYPED_LINES = [
-    "DATA PIPELINES THAT STREAM",
-    "SECURITY TOOLS FOR WHAT I SHIP",
-    "PARTY GAMES FOR MY FRIENDS",
-    "A POKEMON FANGAME, FROM SCRATCH",
+    "BIG DATA PROJECTS",
+    "CYBERSECURITY AUDITS",
+    "APPS, TOOLS AND GAMES, BUILT END TO END",
 ]
-
-
-def avatar_data_uri(size: int) -> str:
-    """Square crop of the portrait, embedded so GitHub needs no extra request."""
-    src = next(
-        (p for p in (SCRIPTS / "avatar.jpg", SCRIPTS / "avatar.png") if p.exists()), None
-    )
-    if src is None:
-        raise SystemExit("put the portrait at scripts/avatar.jpg or scripts/avatar.png")
-    im = Image.open(src).convert("RGB")
-    crop = json.loads((SCRIPTS / "avatar_crop.json").read_text()) if (SCRIPTS / "avatar_crop.json").exists() else None
-    if crop:
-        im = im.crop((crop["left"], crop["top"], crop["left"] + crop["size"], crop["top"] + crop["size"]))
-    else:
-        side = min(im.size)
-        im = im.crop(((im.width - side) // 2, (im.height - side) // 2, (im.width + side) // 2, (im.height + side) // 2))
-    resample = Image.NEAREST if im.width <= 128 else Image.LANCZOS
-    im = im.resize((size, size), resample)
-    buf = io.BytesIO()
-    if resample is Image.NEAREST:
-        im.save(buf, "PNG", optimize=True)
-        mime = "image/png"
-    else:
-        im.save(buf, "JPEG", quality=86, optimize=True, progressive=True)
-        mime = "image/jpeg"
-    return f"data:{mime};base64,{base64.b64encode(buf.getvalue()).decode()}"
+SKILL_BARS = ["DATA ENGINEERING", "CYBERSECURITY"]
 
 
 def build_header() -> None:
-    W, H = 960, 330
+    W, H = 960, 320
     pw, ph = W - 8, H - 8
     style = []
     body = []
@@ -801,59 +773,32 @@ def build_header() -> None:
     body.append(f'<rect width="{pw}" height="{ph}" fill="{BG}" stroke="{LINE}" stroke-width="2"/>')
     body.append(f'<rect width="{pw}" height="{ph}" fill="url(#grid)" mask="url(#m)"/>')
 
-    # Portrait in a pixel frame, with HP and XP bars.
-    ax, ay, asz = 40, 40, 200
-    body.append(f'<rect x="{ax + 8}" y="{ay + 8}" width="{asz}" height="{asz}" fill="{ACCENT_DIM}"/>')
-    body.append(f'<rect x="{ax - 4}" y="{ay - 4}" width="{asz + 8}" height="{asz + 8}" fill="{INK}"/>')
-    body.append(
-        f'<image x="{ax}" y="{ay}" width="{asz}" height="{asz}" preserveAspectRatio="xMidYMid slice" '
-        f'href="{avatar_data_uri(400)}"/>'
-    )
-    bars = [("HP", 9), ("XP", 6)]
-    style.append("@keyframes pip{from{opacity:.12}to{opacity:1}}")
-    style.append(".pip{animation:pip .25s ease-out both}")
-    for b, (label, lit) in enumerate(bars):
-        by = ay + asz + 22 + b * 22
-        body.append(pixel_text(label, ax - 4, by, 2, MUTED))
-        for i in range(10):
-            px = ax + 22 + i * 18
-            if i < lit:
-                delay = 0.5 + b * 0.25 + i * 0.07
-                body.append(
-                    f'<rect class="pip" style="animation-delay:{delay:.2f}s" x="{px}" y="{by}" '
-                    f'width="14" height="10" fill="{ACCENT}"/>'
-                )
-            else:
-                body.append(f'<rect x="{px}" y="{by}" width="14" height="10" fill="{LINE}"/>')
-
-    tx = 290
+    tx = 48
     body.append(pixel_text(ROLE, tx, 44, 3, ACCENT))
 
-    # Name, dropped in block by block.
+    # Name on one line, dropped in block by block.
     style.append("@keyframes drop{from{opacity:0;transform:translateY(-18px)}to{opacity:1;transform:none}}")
     style.append(".b{animation:drop .5s cubic-bezier(.16,1,.3,1) both}")
     unit = 12
+    name = " ".join(NAME)
+    assert tx + text_width(name) * unit < pw - 24, "name too wide for the header"
     blocks = []
-    offset = 0
-    for li, word in enumerate(NAME):
-        y = 80 + li * (5 * unit + 14)
-        for bx, by, ci, row, col in pixel_blocks(word, tx, y, unit):
-            delay = 0.1 + (offset + ci) * 0.06 + pseudo_random(li, ci, row, col) * 0.35
-            blocks.append(
-                f'<rect class="b" style="animation-delay:{delay:.2f}s" x="{fmt(bx)}" y="{fmt(by)}" '
-                f'width="{unit}" height="{unit}"/>'
-            )
-        offset += len(word)
+    for bx, by, ci, row, col in pixel_blocks(name, tx, 78, unit):
+        delay = 0.1 + ci * 0.06 + pseudo_random(ci, row, col) * 0.35
+        blocks.append(
+            f'<rect class="b" style="animation-delay:{delay:.2f}s" x="{fmt(bx)}" y="{fmt(by)}" '
+            f'width="{unit}" height="{unit}"/>'
+        )
     body.append(f'<g fill="{INK}">{"".join(blocks)}</g>')
 
     body.append(
-        f'<text x="{tx}" y="250" fill="{INK2}" font-family="{SANS}" font-size="19">{esc(SUBTITLE)}</text>'
+        f'<text x="{tx}" y="184" fill="{INK2}" font-family="{SANS}" font-size="19">{esc(SUBTITLE)}</text>'
     )
 
     # Typed lines: a cover the colour of the panel slides off each line,
     # one character at a time, then slides back.
     tu = 4
-    ty = 270
+    ty = 210
     prompt_w = (text_width(">") + 2) * tu
     body.append(pixel_text(">", tx, ty, tu, ACCENT))
     lx = tx + prompt_w
@@ -909,6 +854,57 @@ def build_header() -> None:
             f"</g></g>"
         )
     assert lx + max_w < pw - 24, "typed line too long for the header"
+
+    # Skill bars: they fill up, glow at the top for a few seconds, drop to
+    # zero at once and start again.
+    bars_y = 252
+    pips, pip_w, pip_gap, pip_h = 20, 15, 4, 12
+    step, hold, rest, first = 0.09, 3.0, 0.45, 0.4
+    cycle = first + 0.2 + pips * step + 0.1 + hold + rest
+    reset = cycle - rest
+    bright = "#b6f7c8"
+
+    def at(sec: float) -> str:
+        return f"{100 * sec / cycle:.3f}%"
+
+    body.append(
+        '<defs><filter id="glow" x="-10%" y="-150%" width="120%" height="400%">'
+        '<feGaussianBlur stdDeviation="5"/></filter></defs>'
+    )
+    for b, label in enumerate(SKILL_BARS):
+        x = tx + b * 452
+        start = first + b * 0.2
+        full = start + pips * step + 0.1
+        body.append(pixel_text(label, x, bars_y, 2, INK2))
+        py = bars_y + 18
+        bar_w = pips * (pip_w + pip_gap) - pip_gap
+        glow = [
+            "0%{opacity:0}", f"{at(full)}{{opacity:0}}", f"{at(full + 0.25)}{{opacity:.55}}",
+            f"{at(full + 0.9)}{{opacity:.3}}", f"{at(full + 1.5)}{{opacity:.55}}",
+            f"{at(full + 2.1)}{{opacity:.3}}", f"{at(reset - 0.02)}{{opacity:.5}}",
+            f"{at(reset)}{{opacity:0}}", "100%{opacity:0}",
+        ]
+        style.append(f"@keyframes g{b}{{{''.join(glow)}}}.g{b}{{animation:g{b} {cycle:.2f}s linear infinite}}")
+        body.append(
+            f'<rect class="g{b}" opacity="0" x="{x}" y="{py}" width="{bar_w}" height="{pip_h}" '
+            f'fill="{ACCENT}" filter="url(#glow)"/>'
+        )
+        for i in range(pips):
+            frames = ["0%{fill:" + LINE + "}", f"{at(start + (i + 1) * step)}{{fill:{ACCENT}}}"]
+            for k in range(3):
+                shine = full + 0.3 + k * 0.9 + i * 0.025
+                frames.append(f"{at(shine)}{{fill:{bright}}}")
+                frames.append(f"{at(shine + 0.12)}{{fill:{ACCENT}}}")
+            frames += [f"{at(reset)}{{fill:{LINE}}}", "100%{fill:" + LINE + "}"]
+            style.append(
+                f"@keyframes s{b}_{i}{{{''.join(frames)}}}"
+                f".s{b}_{i}{{animation:s{b}_{i} {cycle:.2f}s step-end infinite}}"
+            )
+            # Base fill is the full bar, which is what reduced motion shows.
+            body.append(
+                f'<rect class="s{b}_{i}" x="{x + i * (pip_w + pip_gap)}" y="{py}" width="{pip_w}" '
+                f'height="{pip_h}" fill="{ACCENT}"/>'
+            )
 
     title = f"{' '.join(NAME).title()}. {SUBTITLE}."
     write(ASSETS / "header.svg", svg(W, H, "".join(body), title, "".join(style)))
@@ -994,13 +990,13 @@ PROJECTS = [
         "stack": "Python · DuckDB · scikit-learn · React · Recharts",
     },
     {
-        "id": "panchito",
+        "id": "pokemon-spain",
         "sprite": "gamepad",
-        "name": "POKEMON PANCHITO",
+        "name": "POKEMON SPAIN",
         "context": "Side project · in progress",
         "stat": "452",
         "stat_label": "automated tests",
-        "lines": ["Non-profit fangame built from scratch in Godot 4:", "battles, breeding and a RandomLocke mode."],
+        "lines": ["Non-profit fangame built from the ground up in", "Godot 4: battles, breeding and a RandomLocke mode."],
         "stack": "Godot 4 · GDScript · GUT",
     },
 ]

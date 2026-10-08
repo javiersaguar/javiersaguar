@@ -30,7 +30,7 @@
   <a href="https://github.com/javiersaguar/BigData-Pipeline-Flight-Simulation"><img src="assets/cards/flight-delays.svg" width="49%" alt="Flight Delays, Big Data in the Cloud, team of 2. Flight-delay predictions served through Kafka, with an Iceberg lakehouse and Airflow plus MLflow retraining, on Google Kubernetes Engine." /></a>
   <a href="https://github.com/javiersaguar/Ciber-Tool"><img src="assets/cards/atalaya.svg" width="49%" alt="Atalaya, personal project. Defensive security toolkit: HTTP header and TLS audits, secret scanning and an SSH honeypot behind one CLI." /></a>
   <a href="https://github.com/javiersaguar/EUROPEAN-BAD-DRIVERS"><img src="assets/cards/bad-drivers.svg" width="49%" alt="European Bad Drivers, personal research project. 301,218 injury crashes analysed: where people drive worse depends on the measure. Live observatory." /></a>
-  <a href="https://github.com/javiersaguar/Pokemon-FanGame"><img src="assets/cards/panchito.svg" width="49%" alt="Pokémon Panchito, side project in progress. Non-profit fangame built from scratch in Godot 4, with 452 automated tests." /></a>
+  <a href="https://github.com/javiersaguar/Pokemon-FanGame"><img src="assets/cards/pokemon-spain.svg" width="49%" alt="Pokémon Spain, side project in progress. Non-profit fangame built from the ground up in Godot 4, with 452 automated tests." /></a>
 </p>
 
 <p align="center">
