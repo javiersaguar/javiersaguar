@@ -1,96 +1,92 @@
 <div align="center">
 
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:0d1117,60:2b2b2b,100:d4af37&height=190&section=header&text=Javi&fontSize=70&fontColor=ffffff&animation=fadeIn&desc=Data%20Engineering%20%C3%97%20Cybersecurity&descSize=22&descAlignY=78" width="100%"/>
+<img src="assets/header.svg" width="100%" alt="Javier Saguar. Player 1, data engineer. Final-year Data Engineering student at ETSIT-UPM, Madrid." />
 
-[![Typing SVG](https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&pause=1000&color=D4AF37&center=true&vCenter=true&width=620&lines=Ingenier%C3%ADa+y+Sistemas+de+Datos+%40+UPM;Cofundador+%40+FORTIA+Security;Big+Data+%7C+Pentesting+%7C+Cloud)](https://git.io/typing-svg)
-
-</div>
-
----
-
-## Sobre mí
-
-- Estudiante de **Ingeniería y Sistemas de Datos** en la **UPM — ETSIT** (Madrid)
-- Cofundador de **FORTIA Security** — ciberseguridad para PYMEs: auditorías web, simulaciones de phishing y formación de empleados
--  Proyectos end-to-end de **Big Data en Kubernetes**: streaming, orquestación y observabilidad
-- Imparto talleres a grupos de personas sobre IA y ciberseguridad
-
----
-
-## Stack tecnológico
-
-### Lenguajes
-![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
-![Scala](https://img.shields.io/badge/Scala-DC322F?style=for-the-badge&logo=scala&logoColor=white)
-![Bash](https://img.shields.io/badge/Bash-4EAA25?style=for-the-badge&logo=gnubash&logoColor=white)
-![C](https://img.shields.io/badge/C-00599C?style=for-the-badge&logo=c&logoColor=white)
-![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
-
-### Big Data & Machine Learning
-![Apache Spark](https://img.shields.io/badge/Apache%20Spark-E25A1C?style=for-the-badge&logo=apachespark&logoColor=white)
-![Apache Kafka](https://img.shields.io/badge/Apache%20Kafka-231F20?style=for-the-badge&logo=apachekafka&logoColor=white)
-![Apache Airflow](https://img.shields.io/badge/Apache%20Airflow-017CEE?style=for-the-badge&logo=apacheairflow&logoColor=white)
-![MLflow](https://img.shields.io/badge/MLflow-0194E2?style=for-the-badge&logo=mlflow&logoColor=white)
-![Hadoop](https://img.shields.io/badge/Hadoop-66CCFF?style=for-the-badge&logo=apachehadoop&logoColor=black)
-![Flink](https://img.shields.io/badge/Apache%20Flink-E6526F?style=for-the-badge&logo=apacheflink&logoColor=white)
-![Pandas](https://img.shields.io/badge/Pandas-150458?style=for-the-badge&logo=pandas&logoColor=white)
-
-### Bases de datos
-![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
-![Cassandra](https://img.shields.io/badge/Cassandra-1287B1?style=for-the-badge&logo=apachecassandra&logoColor=white)
-![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
-![SPARQL / RDF](https://img.shields.io/badge/SPARQL%20%2F%20RDF-0C479C?style=for-the-badge)
-![MinIO](https://img.shields.io/badge/MinIO%20%2B%20Iceberg-C72E49?style=for-the-badge&logo=minio&logoColor=white)
-
-### Cloud & DevOps
-![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
-![Kubernetes](https://img.shields.io/badge/Kubernetes-326CE5?style=for-the-badge&logo=kubernetes&logoColor=white)
-![Google Cloud](https://img.shields.io/badge/Google%20Cloud-4285F4?style=for-the-badge&logo=googlecloud&logoColor=white)
-![AWS](https://img.shields.io/badge/AWS-FF9900?style=for-the-badge&logoColor=white)
-![Prometheus](https://img.shields.io/badge/Prometheus-E6522C?style=for-the-badge&logo=prometheus&logoColor=white)
-![Grafana](https://img.shields.io/badge/Grafana-F46800?style=for-the-badge&logo=grafana&logoColor=white)
-![Flask](https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=flask&logoColor=white)
-![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white)
-![Linux](https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black)
-
-### Ciberseguridad
-![Kali Linux](https://img.shields.io/badge/Kali%20Linux-557C94?style=for-the-badge&logo=kalilinux&logoColor=white)
-![Wireshark](https://img.shields.io/badge/Wireshark-1679A7?style=for-the-badge&logo=wireshark&logoColor=white)
-![Metasploit](https://img.shields.io/badge/Metasploit-2A6478?style=for-the-badge&logo=metasploit&logoColor=white)
-![Burp Suite](https://img.shields.io/badge/Burp%20Suite-FF6633?style=for-the-badge&logo=burpsuite&logoColor=white)
-![Nmap](https://img.shields.io/badge/Nmap-0E83CD?style=for-the-badge)
-![TryHackMe](https://img.shields.io/badge/TryHackMe-212C42?style=for-the-badge&logo=tryhackme&logoColor=white)
-
----
-
-## Proyectos destacados
-
-| Proyecto | Descripción | Stack |
-|---|---|---|
-| **Pipeline Big Data end-to-end** | Ingesta y procesamiento en streaming, almacenamiento multi-modelo, orquestación, tracking de ML y observabilidad completa. Desplegado en Docker Compose y **Kubernetes (GKE)** | Kafka · Spark Streaming · MongoDB · Cassandra · MinIO/Iceberg · Airflow · MLflow · Prometheus · Grafana |
-| **FORTIA Security** | Consultoría de ciberseguridad para PYMEs: análisis de vulnerabilidades web, simulación de phishing, auditorías y formación | Web corporativa · OWASP · Ingeniería social |
-| **Auditoría web autorizada** | Auditoría de seguridad completa de una aplicación web real, con informe de vulnerabilidades y recomendaciones | Burp Suite · Nmap · OWASP Top 10 |
-| **Percepción para conducción autónoma** | Detección de objetos y estimación de pose sobre el dataset KITTI | YOLO · LiDAR · PnP · OpenCV |
-| **Detección de Tumores cerebrales (Contrastive Learning)** | Detección de tumores sin etiquetas sobre el dataset BRATS | Pytorch · CNN's · ML |
-
----
-
-## Certificaciones y formación
-
-- **Google Cybersecurity Professional Certificate**
-- **TryHackMe — Pentester Jr**
-
-
----
-
-## Contacto
-
-<div align="center">
-
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/javier-saguar-46a3a7396/)
-[![Email](https://img.shields.io/badge/Email-D4AF37?style=for-the-badge&logo=gmail&logoColor=white)](mailto:saguarjavier@gmail.com)
-
+<a href="https://www.linkedin.com/in/javier-saguar-46a3a7396/"><img src="assets/buttons/linkedin.svg" height="46" alt="LinkedIn" /></a>&nbsp;
+<a href="mailto:saguarjavier@gmail.com"><img src="assets/buttons/email.svg" height="46" alt="Email: saguarjavier@gmail.com" /></a>&nbsp;
+<a href="https://portfolio-ashy-three-x3r3sc9h9u.vercel.app"><img src="assets/buttons/portfolio.svg" height="46" alt="Portfolio" /></a>
 
 </div>
 
+<br />
 
+<picture>
+  <source media="(prefers-color-scheme: light)" srcset="assets/titles/about-light.svg" />
+  <img src="assets/titles/about-dark.svg" width="100%" alt="About me" />
+</picture>
+
+<img src="assets/about.svg" width="100%" alt="I'm Javier, a final-year Data Engineering and Systems student at ETSIT-UPM in Madrid. Most of what I build sits where data meets infrastructure: pipelines that stream, store and serve data, and the platforms around them. I also care about security. I co-founded FORTIA Security, a cybersecurity consultancy for small businesses (web security audits, phishing simulations and staff training), and I write my own defensive tools. And sometimes I build just for fun: party games for my friends, a poker chip counter for nights without chips, and a whole Pokémon fangame. Right now: my bachelor's thesis, a cyber situational awareness platform that turns raw security telemetry into correlated, explainable incidents. Redpanda, Sigma rules, multi-stage detection, Neo4j attack graphs and MITRE ATT&amp;CK." />
+
+<br />
+
+<picture>
+  <source media="(prefers-color-scheme: light)" srcset="assets/titles/featured-light.svg" />
+  <img src="assets/titles/featured-dark.svg" width="100%" alt="Featured projects" />
+</picture>
+
+<p align="center">
+  <a href="https://github.com/javiersaguar/HS-Maisa"><img src="assets/cards/albertitos.svg" width="49%" alt="Albertitos, HackSpain 2026, team of 5. Pay, don't pay or escalate, for every invoice: the LLM extracts facts, versioned rules decide. 540 of 540 invoices decided." /></a>
+  <a href="https://github.com/javiersaguar/PIDS-Proyecto1"><img src="assets/cards/happytaxi.svg" width="49%" alt="HappyTaxi, university project, team of 5. Privacy-first data platform over 24.6 million NYC taxi trips, with two chatbots you can drive with hand gestures." /></a>
+  <a href="https://github.com/javiersaguar/BigData-Pipeline-Flight-Simulation"><img src="assets/cards/flight-delays.svg" width="49%" alt="Flight Delays, Big Data in the Cloud, team of 2. Flight-delay predictions served through Kafka, with an Iceberg lakehouse and Airflow plus MLflow retraining, on Google Kubernetes Engine." /></a>
+  <a href="https://github.com/javiersaguar/Ciber-Tool"><img src="assets/cards/atalaya.svg" width="49%" alt="Atalaya, personal project. Defensive security toolkit: HTTP header and TLS audits, secret scanning and an SSH honeypot behind one CLI." /></a>
+  <a href="https://github.com/javiersaguar/EUROPEAN-BAD-DRIVERS"><img src="assets/cards/bad-drivers.svg" width="49%" alt="European Bad Drivers, personal research project. 301,218 injury crashes analysed: where people drive worse depends on the measure. Live observatory." /></a>
+  <a href="https://github.com/javiersaguar/Pokemon-FanGame"><img src="assets/cards/panchito.svg" width="49%" alt="Pokémon Panchito, side project in progress. Non-profit fangame built from scratch in Godot 4, with 452 automated tests." /></a>
+</p>
+
+<p align="center">
+  <a href="https://albertitos.vercel.app"><img src="assets/buttons/demo-albertitos.svg" height="46" alt="Live demo: Albertitos" /></a>&nbsp;
+  <a href="https://happytaxi-javiers-projects-239a8bb6.vercel.app"><img src="assets/buttons/demo-happytaxi.svg" height="46" alt="Live demo: HappyTaxi" /></a>&nbsp;
+  <a href="https://javiersaguar.github.io/EUROPEAN-BAD-DRIVERS/"><img src="assets/buttons/demo-observatory.svg" height="46" alt="Live demo: road-safety observatory" /></a>
+</p>
+
+<img src="assets/coursework.svg" width="100%" alt="Also built for class: object detection (YOLO) and LiDAR-to-camera projection on KITTI; self-supervised brain tumour detection on BraTS with contrastive learning; hand-gesture recognition with MediaPipe and a CNN." />
+
+<br />
+
+<picture>
+  <source media="(prefers-color-scheme: light)" srcset="assets/titles/quests-light.svg" />
+  <img src="assets/titles/quests-dark.svg" width="100%" alt="Side quests: small things I made for game nights" />
+</picture>
+
+<p align="center">
+  <a href="https://poker-texas.vercel.app"><img src="assets/quests/poker.svg" width="49%" alt="Poker Chips: a Texas Hold'em chip counter for when nobody brought chips." /></a>
+  <a href="https://wavelength-ten-blue.vercel.app"><img src="assets/quests/wavelength.svg" width="49%" alt="Wavelength: the party guessing game, on one phone." /></a>
+  <a href="https://tabu-cartas.vercel.app"><img src="assets/quests/tabu.svg" width="49%" alt="Tabú: cards for game nights." /></a>
+  <a href="https://bet366-nine.vercel.app"><img src="assets/quests/bet366.svg" width="49%" alt="Bet366: a betting house for friends. Points only, never real money." /></a>
+</p>
+
+<br />
+
+<picture>
+  <source media="(prefers-color-scheme: light)" srcset="assets/titles/stack-light.svg" />
+  <img src="assets/titles/stack-dark.svg" width="100%" alt="Tech stack" />
+</picture>
+
+<img src="assets/inventory.svg" width="100%" alt="Tech stack. Data: Spark, Scala, Kafka, Airflow, MongoDB, Cassandra, MLflow, DuckDB. Security: Kali, Wireshark, Metasploit, Burp Suite, TryHackMe, OWASP. Cloud and ops: Docker, Kubernetes, Google Cloud, Prometheus, Grafana, GitHub Actions, Linux, Vercel. Code: Python, TypeScript, FastAPI, React, Next.js, Godot, Bash, SQL." />
+
+<br />
+
+<picture>
+  <source media="(prefers-color-scheme: light)" srcset="assets/titles/certifications-light.svg" />
+  <img src="assets/titles/certifications-dark.svg" width="100%" alt="Certifications" />
+</picture>
+
+<img src="assets/certifications.svg" width="100%" alt="Certifications: Google Cybersecurity Professional Certificate; TryHackMe Jr Penetration Tester." />
+
+<br />
+
+<picture>
+  <source media="(prefers-color-scheme: light)" srcset="assets/titles/activity-light.svg" />
+  <img src="assets/titles/activity-dark.svg" width="100%" alt="Activity" />
+</picture>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/javiersaguar/javiersaguar/output/snake-dark.svg" />
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/javiersaguar/javiersaguar/output/snake-light.svg" />
+  <img src="https://raw.githubusercontent.com/javiersaguar/javiersaguar/output/snake-dark.svg" width="100%" alt="A snake eating my GitHub contribution graph" />
+</picture>
+
+<picture>
+  <source media="(prefers-color-scheme: light)" srcset="assets/footer-light.svg" />
+  <img src="assets/footer-dark.svg" width="100%" alt="Built block by block in Madrid." />
+</picture>
