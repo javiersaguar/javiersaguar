@@ -6,12 +6,20 @@ Everything is drawn here: a 5x5 pixel font, small sprites and the layouts.
 No web fonts, no scripts and no third-party image services, so GitHub can
 serve the files as they are. Edit the content lists (ABOUT, PROJECTS,
 QUESTS, INVENTORY...) and run it again.
+
+Each unsuffixed SVG is the dark version. write() also emits its -light.svg
+counterpart from LIGHT_COLORS; README <picture> sources select the browser's
+color scheme. Keep every foreground/background pair in that palette mapping.
+The stack and certification panels are separate 400px images so they can
+wrap on mobile. Technology logos are vendored in icons.json (Simple Icons,
+CC0); missing logos and abstract concepts use explicit text abbreviations.
 """
 
 from __future__ import annotations
 
 import functools
 import json
+import re
 from pathlib import Path
 
 from PIL import ImageFont
@@ -29,6 +37,20 @@ INK2 = "#c9ccc1"
 MUTED = "#8d9288"
 ACCENT = "#5ce483"
 ACCENT_DIM = "#2a6b3d"
+
+# The default assets retain the original dark palette. The light counterparts
+# share the exact same geometry and motion, with explicit semantic color pairs.
+LIGHT_COLORS = {
+    BG: "#f8faf8",
+    BG2: "#eef4ef",
+    LINE: "#b8c8bc",
+    INK: "#17261c",
+    INK2: "#344b3b",
+    MUTED: "#526858",
+    ACCENT: "#1c763a",
+    ACCENT_DIM: "#c1d8c7",
+    "#b6f7c8": "#115b2b",  # Header's animated highlight.
+}
 
 SANS = "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif"
 MONO = "ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace"
@@ -168,6 +190,9 @@ def write(path: Path, content: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(content, encoding="utf-8", newline="\n")
     print(f"{path.relative_to(ROOT)}  {len(content.encode()) / 1024:.1f} KB")
+    if path.suffix == ".svg" and not path.stem.endswith(("-dark", "-light")):
+        light = re.sub(r"#[0-9a-fA-F]{6}\b", lambda m: LIGHT_COLORS.get(m[0].lower(), m[0]), content)
+        write(path.with_stem(path.stem + "-light"), light)
 
 
 def pseudo_random(*keys: int) -> float:
@@ -1048,102 +1073,83 @@ def build_cards() -> None:
 
 INVENTORY = [
     ("DATA", [
-        ("apachespark", "Spark"), ("scala", "Scala"), ("apachekafka", "Kafka"),
-        ("apacheairflow", "Airflow"), ("mongodb", "MongoDB"), ("apachecassandra", "Cassandra"),
-        ("mlflow", "MLflow"), ("duckdb", "DuckDB"),
+        ("apachespark", "Spark"), ("apacheflink", "Flink"), ("apachekafka", "Kafka"),
+        ("text:RP", "Redpanda"), ("clickhouse", "ClickHouse"), ("apacheairflow", "Airflow"),
+        ("databricks", "Databricks"), ("text:ICE", "Iceberg"), ("neo4j", "Neo4j"),
+        ("mongodb", "MongoDB"), ("apachecassandra", "Cassandra"),
     ]),
     ("SECURITY", [
-        ("kalilinux", "Kali"), ("wireshark", "Wireshark"), ("metasploit", "Metasploit"),
-        ("burpsuite", "Burp Suite"), ("tryhackme", "TryHackMe"), ("owasp", "OWASP"),
+        ("wireshark", "Wireshark"), ("text:WZ", "Wazuh"), ("text:SURI", "Suricata"),
+        ("owasp", "OWASP"), ("burpsuite", "Burp Suite"), ("text:NMAP", "Nmap"),
+        ("vault", "Vault"), ("text:ATT&CK", "MITRE ATT&CK"),
     ]),
-    ("CLOUD & OPS", [
-        ("docker", "Docker"), ("kubernetes", "Kubernetes"), ("googlecloud", "GCP"),
-        ("prometheus", "Prometheus"), ("grafana", "Grafana"), ("githubactions", "Actions"),
-        ("linux", "Linux"), ("vercel", "Vercel"),
+    ("CLOUD", [
+        ("googlecloud", "Google Cloud"), ("text:AWS", "AWS"), ("text:AZ", "Azure"),
+        ("terraform", "Terraform"), ("googlebigquery", "BigQuery"), ("text:S3", "S3"),
+        ("cloudflare", "Cloudflare"), ("minio", "MinIO"),
+    ]),
+    ("AI", [
+        ("pytorch", "PyTorch"), ("scikitlearn", "Scikit-learn"), ("text:XGB", "XGBoost"),
+        ("huggingface", "Hugging Face"), ("mlflow", "MLflow"), ("langchain", "LangChain"),
+        ("langgraph", "LangGraph"), ("ollama", "Ollama"), ("text:RAG", "RAG"),
+        ("qdrant", "Qdrant"),
+    ]),
+    ("OPS", [
+        ("docker", "Docker"), ("kubernetes", "Kubernetes"), ("github", "GitHub"),
+        ("prometheus", "Prometheus"), ("grafana", "Grafana"), ("helm", "Helm"),
+        ("opentelemetry", "OpenTelemetry"), ("linux", "Linux"),
     ]),
     ("CODE", [
-        ("python", "Python"), ("typescript", "TypeScript"), ("fastapi", "FastAPI"),
-        ("react", "React"), ("nextdotjs", "Next.js"), ("godotengine", "Godot"),
-        ("gnubash", "Bash"), ("sqlite", "SQL"),
+        ("python", "Python"), ("text:SQL", "SQL"), ("typescript", "TypeScript"),
+        ("fastapi", "FastAPI"), ("react", "React"), ("gnubash", "Bash"),
+        ("godotengine", "Godot"), ("scala", "Scala"), ("pydantic", "Pydantic"),
     ]),
 ]
 
 
+@functools.lru_cache(maxsize=1)
+def tech_icons():
+    return json.loads((SCRIPTS / "icons.json").read_text(encoding="utf-8"))["icons"]
+
+
+def tech_icon(slug: str, x: float, y: float, size: float, fill: str) -> str:
+    # Use explicit abbreviations when the pinned icon set has no logo. SQL and
+    # RAG are concepts, so do not borrow an unrelated product's trademark.
+    if slug.startswith("text:"):
+        label = slug.removeprefix("text:")
+        unit = min(3, (size + 22) / text_width(label))
+        return pixel_text(label, x + (size - text_width(label) * unit) / 2,
+                          y + (size - 5 * unit) / 2, unit, fill)
+    return (f'<path transform="translate({fmt(x)} {fmt(y)}) scale({fmt(size / 24)})" '
+            f'fill="{fill}" d="{tech_icons()[slug]["path"]}"/>')
+
+
 def build_inventory() -> None:
-    icons = json.loads((SCRIPTS / "icons.json").read_text(encoding="utf-8"))["icons"]
-    W = 960
-    pad = 28
-    slot, gap = 80, 10
-    label_w = 150
-    top = 64
-    pitch = slot + 12
-    H = top + len(INVENTORY) * pitch - 12 + pad + 8
-    pw, ph = W - 8, H - 8
-
-    body = [
-        f'<rect x="8" y="8" width="{pw}" height="{ph}" fill="{ACCENT_DIM}"/>',
-        f'<rect width="{pw}" height="{ph}" fill="{BG}" stroke="{LINE}" stroke-width="2"/>',
-        pixel_text("INVENTORY", pad, pad, 3, ACCENT),
-    ]
-    count = sum(len(items) for _, items in INVENTORY)
-    body.append(
-        f'<text x="{pw - pad}" y="{pad + 13}" text-anchor="end" fill="{MUTED}" font-family="{MONO}" '
-        f'font-size="13">{count} items</text>'
-    )
-
-    positions = []
-    for r, (category, items) in enumerate(INVENTORY):
-        y = top + r * pitch
-        body.append(pixel_text(category, pad, y + slot / 2 - 5, 2, INK2))
-        for c, (slug, label) in enumerate(items):
-            x = pad + label_w + c * (slot + gap)
-            positions.append((x, y))
-            i = len(positions) - 1
-            body.append(f'<rect x="{x}" y="{y}" width="{slot}" height="{slot}" fill="{BG2}" stroke="{LINE}" stroke-width="2"/>')
-            s = 30 / 24
+    # Separate 400px panels wrap naturally in GitHub's README on narrow screens.
+    # Labels remain readable instead of shrinking a single 960px inventory.
+    W, pad, columns, slot, slot_h, gap, top = 400, 22, 3, 108, 72, 12, 66
+    for category, items in INVENTORY:
+        rows = (len(items) + columns - 1) // columns
+        H = top + rows * (slot_h + gap) - gap + pad + 8
+        body = [panel(W - 8, H - 8), pixel_text(category, pad, 26, 3, ACCENT)]
+        body.append(
+            f'<text x="{W - 8 - pad}" y="39" text-anchor="end" fill="{MUTED}" '
+            f'font-family="{MONO}" font-size="12">{len(items)} items</text>'
+        )
+        for i, (slug, label) in enumerate(items):
+            x, y = pad + (i % columns) * (slot + gap), top + (i // columns) * (slot_h + gap)
+            assert x + slot <= W - 8 - 16, label
             body.append(
-                f'<path class="i{i}" transform="translate({x + (slot - 30) / 2} {y + 13}) scale({s})" '
-                f'fill="{INK2}" d="{icons[slug]["path"]}"/>'
+                f'<rect x="{x}" y="{y}" width="{slot}" height="{slot_h}" '
+                f'fill="{BG2}" stroke="{LINE}" stroke-width="1"/>'
             )
+            body.append(tech_icon(slug, x + (slot - 28) / 2, y + 10, 28, INK2))
             body.append(
-                f'<text x="{x + slot / 2}" y="{y + slot - 13}" text-anchor="middle" fill="{MUTED}" '
-                f'font-family="{MONO}" font-size="11">{esc(label)}</text>'
+                f'<text x="{x + slot / 2}" y="{y + 59}" text-anchor="middle" fill="{INK2}" '
+                f'font-family="{SANS}" font-size="13.5">{esc(label)}</text>'
             )
-
-    # A selection cursor walks the slots and lights each item up.
-    step = 0.9
-    total = step * len(positions)
-    style = []
-    cursor_frames = []
-    for i, (x, y) in enumerate(positions):
-        p0 = 100 * i / len(positions)
-        p1 = 100 * (i + 1) / len(positions)
-        cursor_frames.append(f"{p0:.3f}%{{transform:translate({x}px,{y}px)}}")
-        on = [f"0%{{fill:{INK2}}}", f"{p0:.3f}%{{fill:{ACCENT}}}", f"{p1:.3f}%{{fill:{INK2}}}", f"100%{{fill:{INK2}}}"]
-        if i == 0:
-            on = [f"0%{{fill:{ACCENT}}}", f"{p1:.3f}%{{fill:{INK2}}}", f"100%{{fill:{INK2}}}"]
-        style.append(f"@keyframes k{i}{{{''.join(on)}}}.i{i}{{animation:k{i} {total:.1f}s step-end infinite}}")
-    style.append(f"@keyframes walk{{{''.join(cursor_frames)}}}")
-    style.append(f".cursor{{animation:walk {total:.1f}s step-end infinite}}")
-
-    # Four pixel corner brackets around a slot.
-    o, arm, t = -5, 14, 4
-    far = slot + 5
-    corners = []
-    for cx, cy, dx, dy in ((o, o, 1, 1), (far, o, -1, 1), (o, far, 1, -1), (far, far, -1, -1)):
-        hx = cx if dx > 0 else cx - arm
-        vy = cy if dy > 0 else cy - arm
-        corners.append(f'<rect x="{hx}" y="{cy if dy > 0 else cy - t}" width="{arm}" height="{t}"/>')
-        corners.append(f'<rect x="{cx if dx > 0 else cx - t}" y="{vy}" width="{t}" height="{arm}"/>')
-    x0, y0 = positions[0]
-    body.append(
-        f'<g class="cursor" fill="{ACCENT}" style="transform:translate({x0}px,{y0}px)">{"".join(corners)}</g>'
-    )
-
-    alt = "Tech stack. " + " ".join(
-        f"{cat.title()}: {', '.join(label for _, label in items)}." for cat, items in INVENTORY
-    )
-    write(ASSETS / "inventory.svg", svg(W, H, "".join(body), alt, "".join(style)))
+        alt = f"Tech stack. {category}: {', '.join(label for _, label in items)}."
+        write(ASSETS / "stack" / f"{category.lower()}.svg", svg(W, H, "".join(body), alt))
 
 
 # --------------------------------------------------------------------------
@@ -1225,7 +1231,7 @@ def plain(src: str) -> str:
 
 
 def panel(w: float, h: float, y: float = 0, stroke: str = LINE, stroke_w: int = 2) -> str:
-    """Dark panel with the hard offset shadow, occupying (w + 8) x (h + 8)."""
+    """Panel with the hard offset shadow, occupying (w + 8) x (h + 8)."""
     return (
         f'<rect x="8" y="{y + 8}" width="{w}" height="{h}" fill="{ACCENT_DIM}"/>'
         f'<rect x="{stroke_w / 2}" y="{y + stroke_w / 2}" width="{w - stroke_w}" height="{h - stroke_w}" '
@@ -1243,12 +1249,12 @@ TITLES = [
     ("quests", "SIDE QUESTS", "small things I made for game nights"),
     ("stack", "TECH STACK", ""),
     ("certifications", "CERTIFICATIONS", ""),
-    ("activity", "ACTIVITY", ""),
 ]
 
 THEMES = {
-    "dark": {"title": INK, "arrow": ACCENT, "rule": "#30363d", "sub": MUTED},
-    "light": {"title": "#1f2328", "arrow": ACCENT_DIM, "rule": "#d0d7de", "sub": "#59636e"},
+    "dark": {"title": INK, "arrow": ACCENT, "rule": LINE, "sub": MUTED},
+    "light": {"title": LIGHT_COLORS[INK], "arrow": LIGHT_COLORS[ACCENT],
+              "rule": LIGHT_COLORS[LINE], "sub": LIGHT_COLORS[MUTED]},
 }
 
 
@@ -1461,32 +1467,42 @@ def build_quests() -> None:
 # Certifications
 # --------------------------------------------------------------------------
 
-CERTS = [("Google Cybersecurity", "Professional Certificate"), ("TryHackMe", "Jr Penetration Tester")]
+CERTS = [
+    {"id": "google", "issuer": "GOOGLE", "icon": "google",
+     "lines": [("Cybersecurity", 21), ("Professional Certificate", 16)],
+     "alt": "Google Cybersecurity Professional Certificate"},
+    {"id": "tryhackme", "issuer": "TRYHACKME", "icon": "tryhackme",
+     "lines": [("Jr Penetration", 21), ("Tester", 21)],
+     "alt": "TryHackMe Jr Penetration Tester"},
+]
 
 
 def build_certifications() -> None:
-    W, H = 960, 148
-    body = [panel(W - 8, H - 8)]
-    style = [
-        SPRITE_CSS,
-        "@keyframes pop{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}"
-        ".pop{animation:pop .5s cubic-bezier(.16,1,.3,1) both}",
-    ]
-    for k, lines in enumerate(CERTS):
-        x = 32 + k * 460
-        markup, _ = sprite("medal", x, 38, 5, delay=k * 0.6)
-        text = "".join(
-            f'<text x="{x + 88}" y="{84 + j * 25}" fill="{INK}" font-family="{SANS}" font-size="19" '
-            f'font-weight="700">{esc(line)}</text>'
-            for j, line in enumerate(lines)
-        )
+    W, H = 400, 204
+    for cert in CERTS:
+        body = [panel(W - 8, H - 8)]
+        # A larger stepped medallion, inset face and two cut ribbons extend the
+        # existing pixel-art system. The centre uses the real issuer's logo.
         body.append(
-            f'<g class="pop" style="animation-delay:{0.2 + k * 0.25:.2f}s">{markup}'
-            f'<text x="{x + 88}" y="56" fill="{MUTED}" font-family="{MONO}" font-size="12">Certificate</text>'
-            f"{text}</g>"
+            f'<path d="M49 115H76L70 175L58 163L44 173Z" fill="{ACCENT_DIM}" stroke="{ACCENT}" stroke-width="2"/>'
+            f'<path d="M80 115H107L112 173L98 163L86 175Z" fill="{ACCENT_DIM}" stroke="{ACCENT}" stroke-width="2"/>'
+            f'<path d="M58 127L54 157M96 127L100 157" fill="none" stroke="{ACCENT}" stroke-width="4"/>'
+            f'<path d="M42 50H54V38H102V50H114V62H126V110H114V122H102V134H54V122H42V110H30V62H42Z" '
+            f'fill="{ACCENT_DIM}" stroke="{ACCENT}" stroke-width="3"/>'
+            f'<path d="M50 62H62V50H94V62H106V74H114V98H106V110H94V122H62V110H50V98H42V74H50Z" '
+            f'fill="{BG2}" stroke="{ACCENT}" stroke-width="2"/>'
+            f'<path d="M54 66V60H66M94 112H102V104" fill="none" stroke="{INK}" stroke-width="3"/>'
         )
-    alt = "Certifications: " + "; ".join(" ".join(c) for c in CERTS) + "."
-    write(ASSETS / "certifications.svg", svg(W, H, "".join(body), alt, "".join(style)))
+        body.append(tech_icon(cert["icon"], 58, 66, 40, INK))
+        body.append(pixel_text(cert["issuer"], 152, 44, 3, ACCENT))
+        for j, (line, size) in enumerate(cert["lines"]):
+            assert measure(line, size, True) < W - 152 - 24, line
+            body.append(
+                f'<text x="152" y="{99 + j * 29}" fill="{INK}" font-family="{SANS}" '
+                f'font-size="{size}" font-weight="700">{esc(line)}</text>'
+            )
+        alt = f'Certifications: {cert["alt"]}.'
+        write(ASSETS / "certifications" / f'{cert["id"]}.svg', svg(W, H, "".join(body), alt))
 
 
 # --------------------------------------------------------------------------
