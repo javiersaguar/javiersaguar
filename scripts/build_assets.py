@@ -10,9 +10,11 @@ QUESTS, INVENTORY...) and run it again.
 Each unsuffixed SVG is the dark version. write() also emits its -light.svg
 counterpart from LIGHT_COLORS; README <picture> sources select the browser's
 color scheme. Keep every foreground/background pair in that palette mapping.
-The stack and certification panels are separate 400px images so they can
-wrap on mobile. Technology logos are vendored in icons.json (Simple Icons,
-CC0); missing logos and abstract concepts use explicit text abbreviations.
+The stack uses one compact inventory with a scan-and-lock selection cursor.
+Certification panels use a clipped metallic glint and pixel sparkles. These
+animations keep the text still and have static reduced-motion fallbacks.
+Technology logos are vendored in icons.json (Simple Icons, CC0); missing
+logos and abstract concepts use explicit text abbreviations.
 """
 
 from __future__ import annotations
@@ -1125,31 +1127,110 @@ def tech_icon(slug: str, x: float, y: float, size: float, fill: str) -> str:
 
 
 def build_inventory() -> None:
-    # Separate 400px panels wrap naturally in GitHub's README on narrow screens.
-    # Labels remain readable instead of shrinking a single 960px inventory.
-    W, pad, columns, slot, slot_h, gap, top = 400, 22, 3, 108, 72, 12, 66
-    for category, items in INVENTORY:
-        rows = (len(items) + columns - 1) // columns
-        H = top + rows * (slot_h + gap) - gap + pad + 8
-        body = [panel(W - 8, H - 8), pixel_text(category, pad, 26, 3, ACCENT)]
-        body.append(
-            f'<text x="{W - 8 - pad}" y="39" text-anchor="end" fill="{MUTED}" '
-            f'font-family="{MONO}" font-size="12">{len(items)} items</text>'
-        )
-        for i, (slug, label) in enumerate(items):
-            x, y = pad + (i % columns) * (slot + gap), top + (i // columns) * (slot_h + gap)
-            assert x + slot <= W - 8 - 16, label
+    # Six single-line categories keep the height close to the original four-row
+    # inventory, even with 54 technologies. Only the selector and overlays move.
+    W, pad, label_w, slot, slot_h, gap, top = 960, 24, 104, 68, 58, 6, 58
+    pitch = slot_h + 8
+    H = top + len(INVENTORY) * pitch - 8 + pad + 8
+    count = sum(len(items) for _, items in INVENTORY)
+    body = [panel(W - 8, H - 8), pixel_text("INVENTORY", pad, 26, 3, ACCENT)]
+    body.append(
+        f'<text x="{W - 8 - pad}" y="39" text-anchor="end" fill="{MUTED}" '
+        f'font-family="{MONO}" font-size="12">{count} items</text>'
+    )
+    split_labels = {
+        "MITRE ATT&CK": ("MITRE", "ATT&CK"), "Google Cloud": ("Google", "Cloud"),
+        "Hugging Face": ("Hugging", "Face"), "OpenTelemetry": ("Open", "Telemetry"),
+    }
+    positions, overlays, hud, style, symbols = [], [], [], [], []
+    # 1.2s per item: a 180ms move followed by a readable pause. Row changes
+    # fade out, teleport while hidden, then fade in, avoiding diagonal sweeps.
+    dwell, move = 1.2, 0.18
+    total = count * dwell
+
+    def pct(t):
+        return f"{100 * t / total:.5f}%"
+
+    for row, (category, items) in enumerate(INVENTORY):
+        y = top + row * pitch
+        body.append(pixel_text(category, pad, y + (slot_h - 10) / 2, 2, INK2))
+        for col, (slug, label) in enumerate(items):
+            x = pad + label_w + col * (slot + gap)
+            assert x + slot + 3 <= W - 8 - 12, label
+            i = len(positions)
+            positions.append((x, y))
             body.append(
                 f'<rect x="{x}" y="{y}" width="{slot}" height="{slot_h}" '
                 f'fill="{BG2}" stroke="{LINE}" stroke-width="1"/>'
             )
-            body.append(tech_icon(slug, x + (slot - 28) / 2, y + 10, 28, INK2))
-            body.append(
-                f'<text x="{x + slot / 2}" y="{y + 59}" text-anchor="middle" fill="{INK2}" '
-                f'font-family="{SANS}" font-size="13.5">{esc(label)}</text>'
+            symbols.append(f'<g id="inventory-icon-{i}">{tech_icon(slug, 0, 0, 24, "currentColor")}</g>')
+            icon_at = f'x="{x + (slot - 24) / 2}" y="{y + 5}"'
+            body.append(f'<use href="#inventory-icon-{i}" {icon_at} color="{INK2}"/>')
+            lines = split_labels.get(label, (label,))
+            for j, line in enumerate(lines):
+                assert measure(line, 11) <= slot - 4, line
+                baseline = y + (47 if len(lines) == 1 else 43 + j * 11)
+                body.append(
+                    f'<text x="{x + slot / 2}" y="{baseline}" text-anchor="middle" fill="{INK2}" '
+                    f'font-family="{SANS}" font-size="11">{esc(line)}</text>'
+                )
+            start, end = i * dwell, (i + 1) * dwell
+            frames = (["0%{opacity:1}"] if i == 0 else
+                      ["0%{opacity:0}", f"{pct(start - move)}{{opacity:0}}", f"{pct(start)}{{opacity:1}}"])
+            frames += [f"{pct(end - move)}{{opacity:1}}", f"{pct(end)}{{opacity:0}}"]
+            if i == 0:
+                frames += [f"{pct(total - move)}{{opacity:0}}", "100%{opacity:1}"]
+            elif end < total:
+                frames.append("100%{opacity:0}")
+            style.append(
+                f"@keyframes item{i}{{{''.join(frames)}}}"
+                f".item{i}{{animation:item{i} {total:.1f}s cubic-bezier(.23,1,.32,1) infinite}}"
             )
-        alt = f"Tech stack. {category}: {', '.join(label for _, label in items)}."
-        write(ASSETS / "stack" / f"{category.lower()}.svg", svg(W, H, "".join(body), alt))
+            visible = 1 if i == 0 else 0
+            overlays.append(
+                f'<g class="item{i}" opacity="{visible}">'
+                f'<rect x="{x}" y="{y}" width="{slot}" height="{slot_h}" fill="{ACCENT}" opacity=".09"/>'
+                f'<use href="#inventory-icon-{i}" {icon_at} color="{ACCENT}"/></g>'
+            )
+            hud.append(
+                f'<text class="item{i}" opacity="{visible}" x="806" y="39" text-anchor="end" '
+                f'fill="{ACCENT}" font-family="{MONO}" font-size="12">{esc(category + " / " + label)}</text>'
+            )
+
+    def cursor_frame(t, position, opacity):
+        x, y = position
+        return f"{pct(t)}{{transform:translate({x}px,{y}px);opacity:{opacity}}}"
+
+    cursor = [cursor_frame(0, positions[0], 1)]
+    for i in range(1, count + 1):
+        previous, target = positions[i - 1], positions[i % count]
+        t = i * dwell
+        if target[1] == previous[1]:
+            cursor += [cursor_frame(t - move, previous, 1), cursor_frame(t, target, 1)]
+        else:
+            cursor += [cursor_frame(t - 2 * move, previous, 1), cursor_frame(t - move, previous, 0),
+                       cursor_frame(t - move + .001, target, 0), cursor_frame(t, target, 1)]
+    style.append(
+        f"@keyframes inventory-scan{{{''.join(cursor)}}}"
+        f".inventory-cursor{{animation:inventory-scan {total:.1f}s cubic-bezier(.77,0,.175,1) infinite}}"
+    )
+    # Pixel corner brackets, rather than a moving tile or label, keep the
+    # inventory legible while making the selected technology feel 'equipped'.
+    corners = []
+    for x, y, dx, dy in ((-3, -3, 1, 1), (slot + 3, -3, -1, 1),
+                          (-3, slot_h + 3, 1, -1), (slot + 3, slot_h + 3, -1, -1)):
+        corners.append(f'<rect x="{x if dx > 0 else x - 9}" y="{y if dy > 0 else y - 2}" width="9" height="2"/>')
+        corners.append(f'<rect x="{x if dx > 0 else x - 2}" y="{y if dy > 0 else y - 9}" width="2" height="9"/>')
+    body.insert(0, f'<defs>{"".join(symbols)}</defs>')
+    body += overlays + hud
+    body.append(
+        f'<g class="inventory-cursor" fill="{ACCENT}" style="transform:translate({positions[0][0]}px,{positions[0][1]}px)">'
+        f'{"".join(corners)}</g>'
+    )
+    alt = "Tech stack. " + " ".join(
+        f"{category}: {', '.join(label for _, label in items)}." for category, items in INVENTORY
+    )
+    write(ASSETS / "inventory.svg", svg(W, H, "".join(body), alt, "".join(style)))
 
 
 # --------------------------------------------------------------------------
@@ -1479,21 +1560,37 @@ CERTS = [
 
 def build_certifications() -> None:
     W, H = 400, 204
-    for cert in CERTS:
+    medal_edge = "M42 50H54V38H102V50H114V62H126V110H114V122H102V134H54V122H42V110H30V62H42Z"
+    for k, cert in enumerate(CERTS):
         body = [panel(W - 8, H - 8)]
+        body.append(f'<defs><clipPath id="medal-face"><path d="{medal_edge}"/></clipPath></defs>')
         # A larger stepped medallion, inset face and two cut ribbons extend the
         # existing pixel-art system. The centre uses the real issuer's logo.
         body.append(
             f'<path d="M49 115H76L70 175L58 163L44 173Z" fill="{ACCENT_DIM}" stroke="{ACCENT}" stroke-width="2"/>'
             f'<path d="M80 115H107L112 173L98 163L86 175Z" fill="{ACCENT_DIM}" stroke="{ACCENT}" stroke-width="2"/>'
             f'<path d="M58 127L54 157M96 127L100 157" fill="none" stroke="{ACCENT}" stroke-width="4"/>'
-            f'<path d="M42 50H54V38H102V50H114V62H126V110H114V122H102V134H54V122H42V110H30V62H42Z" '
+            f'<path d="{medal_edge}" '
             f'fill="{ACCENT_DIM}" stroke="{ACCENT}" stroke-width="3"/>'
             f'<path d="M50 62H62V50H94V62H106V74H114V98H106V110H94V122H62V110H50V98H42V74H50Z" '
             f'fill="{BG2}" stroke="{ACCENT}" stroke-width="2"/>'
             f'<path d="M54 66V60H66M94 112H102V104" fill="none" stroke="{INK}" stroke-width="3"/>'
         )
         body.append(tech_icon(cert["icon"], 58, 66, 40, INK))
+        # An intermittent reflection crosses the coin only. The issuer and
+        # credential text remain fully visible, with no entrance fade or bounce.
+        body.append(
+            '<g clip-path="url(#medal-face)"><g class="medal-glint" opacity="0">'
+            '<path d="M0 30H12L76 140H64Z" fill="#fff" opacity=".45"/>'
+            '<path d="M16 30H20L84 140H80Z" fill="#fff" opacity=".75"/>'
+            '</g></g>'
+        )
+        for i, (x, y) in enumerate(((130, 32), (18, 110))):
+            body.append(
+                f'<g class="medal-spark spark{i}" opacity="0" fill="{ACCENT}">'
+                f'<rect x="{x + 4}" y="{y}" width="2" height="10"/>'
+                f'<rect x="{x}" y="{y + 4}" width="10" height="2"/></g>'
+            )
         body.append(pixel_text(cert["issuer"], 152, 44, 3, ACCENT))
         for j, (line, size) in enumerate(cert["lines"]):
             assert measure(line, size, True) < W - 152 - 24, line
@@ -1502,7 +1599,18 @@ def build_certifications() -> None:
                 f'font-size="{size}" font-weight="700">{esc(line)}</text>'
             )
         alt = f'Certifications: {cert["alt"]}.'
-        write(ASSETS / "certifications" / f'{cert["id"]}.svg', svg(W, H, "".join(body), alt))
+        delay = k * 2.4
+        css = (
+            "@keyframes medal-glint{0%,6%{opacity:0;transform:translateX(-100px)}"
+            "6.01%{opacity:1;transform:translateX(-100px)}"
+            "18%{opacity:1;transform:translateX(140px)}"
+            "19%,100%{opacity:0;transform:translateX(140px)}}"
+            f".medal-glint{{animation:medal-glint 6s linear {delay:.1f}s infinite}}"
+            "@keyframes medal-spark{0%,13%,24%,100%{opacity:0}18%{opacity:.9}}"
+            f".medal-spark{{animation:medal-spark 6s linear {delay:.1f}s infinite}}"
+            f".spark1{{animation-delay:{delay + .18:.2f}s}}"
+        )
+        write(ASSETS / "certifications" / f'{cert["id"]}.svg', svg(W, H, "".join(body), alt, css))
 
 
 # --------------------------------------------------------------------------

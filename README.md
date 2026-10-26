@@ -66,14 +66,11 @@
   <img src="assets/titles/stack-dark.svg" width="100%" alt="Tech stack" />
 </picture>
 
-<p align="center">
-  <picture><source media="(prefers-color-scheme: dark)" srcset="assets/stack/data.svg" /><source media="(prefers-color-scheme: light)" srcset="assets/stack/data-light.svg" /><img src="assets/stack/data.svg" width="400" align="top" alt="Tech stack. DATA: Spark, Flink, Kafka, Redpanda, ClickHouse, Airflow, Databricks, Iceberg, Neo4j, MongoDB, Cassandra." /></picture>
-  <picture><source media="(prefers-color-scheme: dark)" srcset="assets/stack/security.svg" /><source media="(prefers-color-scheme: light)" srcset="assets/stack/security-light.svg" /><img src="assets/stack/security.svg" width="400" align="top" alt="Tech stack. SECURITY: Wireshark, Wazuh, Suricata, OWASP, Burp Suite, Nmap, Vault, MITRE ATT&amp;CK." /></picture>
-  <picture><source media="(prefers-color-scheme: dark)" srcset="assets/stack/cloud.svg" /><source media="(prefers-color-scheme: light)" srcset="assets/stack/cloud-light.svg" /><img src="assets/stack/cloud.svg" width="400" align="top" alt="Tech stack. CLOUD: Google Cloud, AWS, Azure, Terraform, BigQuery, S3, Cloudflare, MinIO." /></picture>
-  <picture><source media="(prefers-color-scheme: dark)" srcset="assets/stack/ai.svg" /><source media="(prefers-color-scheme: light)" srcset="assets/stack/ai-light.svg" /><img src="assets/stack/ai.svg" width="400" align="top" alt="Tech stack. AI: PyTorch, Scikit-learn, XGBoost, Hugging Face, MLflow, LangChain, LangGraph, Ollama, RAG, Qdrant." /></picture>
-  <picture><source media="(prefers-color-scheme: dark)" srcset="assets/stack/ops.svg" /><source media="(prefers-color-scheme: light)" srcset="assets/stack/ops-light.svg" /><img src="assets/stack/ops.svg" width="400" align="top" alt="Tech stack. OPS: Docker, Kubernetes, GitHub, Prometheus, Grafana, Helm, OpenTelemetry, Linux." /></picture>
-  <picture><source media="(prefers-color-scheme: dark)" srcset="assets/stack/code.svg" /><source media="(prefers-color-scheme: light)" srcset="assets/stack/code-light.svg" /><img src="assets/stack/code.svg" width="400" align="top" alt="Tech stack. CODE: Python, SQL, TypeScript, FastAPI, React, Bash, Godot, Scala, Pydantic." /></picture>
-</p>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/inventory.svg" />
+  <source media="(prefers-color-scheme: light)" srcset="assets/inventory-light.svg" />
+  <img src="assets/inventory.svg" width="100%" alt="Tech stack. DATA: Spark, Flink, Kafka, Redpanda, ClickHouse, Airflow, Databricks, Iceberg, Neo4j, MongoDB, Cassandra. SECURITY: Wireshark, Wazuh, Suricata, OWASP, Burp Suite, Nmap, Vault, MITRE ATT&amp;CK. CLOUD: Google Cloud, AWS, Azure, Terraform, BigQuery, S3, Cloudflare, MinIO. AI: PyTorch, Scikit-learn, XGBoost, Hugging Face, MLflow, LangChain, LangGraph, Ollama, RAG, Qdrant. OPS: Docker, Kubernetes, GitHub, Prometheus, Grafana, Helm, OpenTelemetry, Linux. CODE: Python, SQL, TypeScript, FastAPI, React, Bash, Godot, Scala, Pydantic." />
+</picture>
 
 <br />
 
